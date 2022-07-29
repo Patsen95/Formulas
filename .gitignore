@@ -1,0 +1,12 @@
+
+*.vsidx
+*.lock
+.vs/Formulas/v16/.suo
+.vs/Formulas/v16/Browse.VC.db
+.vs/Formulas/v17/.suo
+.vs/Formulas/v17/Browse.VC.db
+*.ipch
+Formulas/Debug/Formulas.exe.recipe
+Formulas/Debug/Formulas.log
+Formulas/Debug/Formulas.vcxproj.FileListAbsolute.txt
+Formulas/Debug/Formulas.Build.CppClean.log
