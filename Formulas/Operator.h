@@ -13,7 +13,8 @@ namespace fmls
 
 		static enum Type
 		{
-			ADDITION = 0,
+			NONE = 0,
+			ADDITION,
 			SUBTRACTION,
 			MULTIPLICATION,
 			DIVISION,
@@ -25,6 +26,7 @@ namespace fmls
 		};
 
 		static std::string GetSymbol(Type type);
+
 
 	private:
 		static const std::map<int, std::string> _operators;

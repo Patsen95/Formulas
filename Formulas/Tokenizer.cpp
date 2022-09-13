@@ -3,56 +3,86 @@
 
 
 #include <iostream>
-#include <cctype>
-
+#include <array>
 
 
 namespace fmls
 {
-	/// TODO: Think to use std::vector instead or create Operator class object and
-	/// register all operators in it
-	static const char *_ops[9] = { "+", "-", "*", "/", "%", "^", "sq", "log", "ln" };
+	static const std::array<const char*, 9> _ops = { "+", "-", "*", "/", "%", "^", "sq", "log", "ln" };
 
-	Tokenizer::Tokenizer() {}
 
-	void Tokenizer::ParseInput(std::string input)
+	bool IsDigit(const char& val)
 	{
-		int len = input.length();
-		for(int i = 0; i < len; i++)
+		if(val > 47 && val < 58)
+			return true;
+		return false;
+	}
+
+
+
+
+	//Tokenizer::Tokenizer() {}
+	//Tokenizer::~Tokenizer() {}
+
+	void Tokenizer::ParseInput(std::string& input)
+	{
+		PRINTLN(input);
+
+		size_t _len = input.length();
+				
+		// Trim all white characters
+		for(int i = 0; i < _len; i++)
 		{
-			// Trim all white characters
 			while(input[i] == 32)
 				input.erase(i, 1);
-
-			// Add multiplication sign, if needed
-			if((isdigit(input[i]) && input[i + 1] == '(') ||
-				(input[i] == ')' && isdigit(input[i + 1])))
-				input.insert(i + 1, "*");
-			len = input.length(); // Update length
+			_len = input.length(); // Update length
 		}
 
-		// ERROR CATCHING
-		//for(int i = 0; i < len; i++)
-		//{
-		//	// Check for parenthesis...
-		//	if((!(input[i] == '*' && input[i + 1] == '(') && !(input[i] == ')' && input[i + 1] == '*')) &&
-		//		(!(input[i] == '/' && input[i + 1] == '(') && !(input[i] == ')' && input[i + 1] == '/')) &&
-		//		(!(input[i] == '*' && input[i + 1] == '(') && !(input[i] == ')' && input[i + 1] == '*')) &&
-		//		(!(input[i] == '*' && input[i + 1] == '(') && !(input[i] == ')' && input[i + 1] == '*')))
-		//	{
-		//		// Operator without number next to it...
-		//		if(((input[i] == *_ops[0] || input[i] == *_ops[1]) && !isdigit(input[i + 1]))) // +, -
-		//			print("[Syntax error] Operator \'" << input[i] << "\' without value.\n");
+		// SYNTAX ERROR CATCHING
+		// Checking if input contains any of predefined operators
 
-		//		// ...or behind it
-		//		if(((input[i] == *_ops[2] || input[i] == *_ops[3] || input[i] == *_ops[4]) && // *, /, %
-		//			(len == 1 || !isdigit(input[i - 1]))))
-		//			print("[Syntax error] Operator \'" << input[i] << "\' without leftside value.\n");
+		int _par_cnt = 0;
 
-		//		if(((input[i] == *_ops[2] || input[i] == *_ops[3] || input[i] == *_ops[4]) && // *, /, %
-		//			!isdigit(input[i + 1])))
-		//			print("[Syntax error] Operator \'" << input[i] << "\' without rightside value.\n");
-		//	}
-		//}
+		for(int i = 0; i < _len; i++)
+		{
+			// Count parenthesis
+			if(input[i] == '(') _par_cnt++;
+			if(input[i] == ')') _par_cnt--;
+
+			// Operator without number next to it...
+			if(((input[i] == *_ops[0] || input[i] == *_ops[1]) && !IsDigit(input[i + 1]))) // +, -
+				ErrorHandler::RaiseError(ErrorType::SYNTAX_ERROR, "Operator without value.");
+
+			// ...or behind it
+			if(((input[i] == *_ops[2] || input[i] == *_ops[3] || input[i] == *_ops[4]) && // *, /, %
+				(_len == 1 || !IsDigit(input[i - 1]))))
+				ErrorHandler::RaiseError(ErrorType::SYNTAX_ERROR, "Operator without value.");
+
+			if(((input[i] == *_ops[2] || input[i] == *_ops[3] || input[i] == *_ops[4]) && // *, /, %
+				!IsDigit(input[i + 1])))
+				ErrorHandler::RaiseError(ErrorType::SYNTAX_ERROR, "Operator without value.");
+		}
+
+		if(_par_cnt != 0)
+		{
+			ErrorHandler::RaiseError(ErrorType::SYNTAX_ERROR, "Some parenthesis are not complete");
+			return;
+		}
+		
+		PRINTLN(input);
+
+		// Add multiplication sign, if needed
+		for(int i = 0; i < _len; i++)
+		{
+			if((i + 1) < _len)
+			{
+				if((IsDigit(input[i]) && input[i + 1] == '(') ||
+					(input[i] == ')' && IsDigit(input[i + 1])))
+					input.insert(i + 1, "*");
+			}
+		}
+
+		PRINTLN(input);
+
 	}
 }

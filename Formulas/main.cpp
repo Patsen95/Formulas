@@ -2,24 +2,25 @@
 #include <string>
 
 #include "Tokenizer.h"
-#include "Operator.h"
 
-using namespace fmls;
 
 
 
 
 int main()
 {
-	std::string expr = "2 + 3+(1 - 2)";
+	// 2 + 3(1 - 2)
+	//std::string expr = "2 + 3*(1 - 2)";
+	std::string expr = "2 +      3*(   1 - 2)";
 
     //std::cout << "Enter the expression: ";
 	//std::cin >> expr;
 	
-	//Tokenizer tok;
-	//tok.ParseInput(expr);
+	using namespace fmls;
 
-	
+	//Tokenizer tok;
+	//Tokenizer::ParseInput(expr);
+
 
 	std::cin.get();
 }
