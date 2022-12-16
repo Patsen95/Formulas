@@ -1,0 +1,96 @@
+Input example: 2 + 3(1-2)
+Expected output: -1
+
+
+
+OPERATORS:
++  - addition
+-  - subtraction
+*  - multiplication
+/  - division
+%  - modulo
+^  - exponent
+() - parenthesis (subexpression)
+
+FUNCTIONS:
+sq - square root
+log - logarithm
+ln - natural logarithm
+
+
+
+INPUT PROCESSING PIPELINE:
+
+			INPUT FORMULA
+				 ||
+				 || Parsing and preliminary simplification
+				 ||
+				 \/
+		  PREPROCESSED INPUT
+				 ||
+				 || Tokenizer
+				 ||
+				 \/
+			TOKENS ARRAY
+				 ||
+				 || Expression Builder
+				 ||
+				 \/
+			 EXPRESSION
+				 ||
+				 || Evaluator
+				 ||
+				 \/
+			   RESULT
+
+
+
+
+A) PREPARE INPUT FOR FURTHER PARSING
+
+	1. Remove all white characters
+		2 + 3(1 - 2)  =>  2+3(1-2)
+
+	2. Check for any errors inside an expression
+
+	*Operator without number: 
+		1 + - 4 * 3
+
+	*Two numbers (digits) without operator between them:
+		3 - 4 8
+
+	ONLY exception:
+		4(-2 + 3 - 1)	=>	invisible multiplication opetator between
+							number and open / closed parenthesis - see below
+
+
+	3. If there is an invisible multiplication operator (a number right
+		next to an open or closed parenthesis), then add star (mult) sign between them
+
+		2+3(1-2) => 2+3*(1-2)
+
+
+
+B) PARSE PREPROCESSED INPUT
+
+	All characters in input formula are represented by an object called Token.
+	Each token contains a value and it's type. The mechanism which decontructs that input
+	is called Tokenizer.
+
+	Expression: 2+3*(1-2)
+
+	Tokenizer output:
+
+	{
+		NUMBER: 2
+		OPERATOR: +
+		NUMBER: 3
+		PARENTHESIS: NaN
+		NUMBER: 1
+		OPERATOR: -
+		NUMBER: 2
+		PARENTHESIS: NaN
+	}
+
+
+

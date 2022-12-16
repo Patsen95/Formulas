@@ -11,10 +11,9 @@ namespace fmls
 {
 	enum TokenType
 	{
-		//NONE = -1,
+		NONE = 0,
 		NUMBER,
 		OPERATOR,
-		PARENTHESIS
 	};
 
 	template<typename T>
